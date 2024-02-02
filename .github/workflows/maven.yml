@@ -28,9 +28,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: cd Wasteless
-           mvn clean install
-      working-directory: ${{ github.workspace }}/Wasteless
+      run: mvn clean install
+      working-directory: Wasteless
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
