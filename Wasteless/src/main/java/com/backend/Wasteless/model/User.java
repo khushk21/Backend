@@ -7,28 +7,65 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class User {
     @Id
-    private String userId;
-    private String name;
-    private String rollNumber;
+    private String userName;
 
-    public User(String name, String rollNumber) {
-        super();
+    private String name;
+
+    private String email;
+
+    private String password;
+
+    // will use this later
+    // List <WastePOI> favourites = List<WastePOI>(5);
+    // List<WasteRecord> wasteRecords;
+
+    int points;
+
+    public User(String userName, String name, String email, String password) {
+        this.userName = userName;
         this.name = name;
-        this.rollNumber = rollNumber;
+        this.email = email;
+        this.password = password;
     }
-    public String getUserId() {
-        return userId;
+
+    public String getPassword() {
+        return password;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public String getRollNumber() {
-        return rollNumber;
+
+    public String getEmail() {
+        return email;
     }
-    public void setRollNumber(String rollNumber) {
-        this.rollNumber = rollNumber;
+
+    public void setEmail(String email) {
+        this.email = email;
     }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
 }
