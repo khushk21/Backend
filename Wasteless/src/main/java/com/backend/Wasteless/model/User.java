@@ -3,6 +3,7 @@ package com.backend.Wasteless.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.List;
 
 @Document
 public class User {
@@ -17,7 +18,7 @@ public class User {
 
     // will use this later
     // List <WastePOI> favourites = List<WastePOI>(5);
-    // List<WasteRecord> wasteRecords;
+     List<WasteRecord> wasteRecords;
 
     int points;
 
@@ -66,6 +67,14 @@ public class User {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public List<WasteRecord> getWasteRecords() {
+        return wasteRecords;
+    }
+
+    public void setWasteRecords(List<WasteRecord> wasteRecords) {
+        this.wasteRecords = wasteRecords;
     }
 
 }
