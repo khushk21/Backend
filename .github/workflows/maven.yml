@@ -36,7 +36,7 @@ jobs:
         image: nusissteam21/wasteless-backend
         tags: latest
         registry: docker.io
-        dockerfile: Dockerfile
+        dockerfile: Wasteless/Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
