@@ -1,8 +1,8 @@
 package com.backend.Wasteless.model;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -16,11 +16,10 @@ public class User {
 
     private String password;
 
-    // will use this later
-    // List <WastePOI> favourites = List<WastePOI>(5);
-     List<WasteRecord> wasteRecords;
+    private List <WastePOI> favourites = new ArrayList <WastePOI>(5);
+    private List<WasteRecord> wasteRecords = new ArrayList<>();
 
-    int points;
+    private int points;
 
     public User(String userName, String name, String email, String password) {
         this.userName = userName;
@@ -75,6 +74,14 @@ public class User {
 
     public void setWasteRecords(List<WasteRecord> wasteRecords) {
         this.wasteRecords = wasteRecords;
+    }
+
+    public List<WastePOI> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<WastePOI> favourites) {
+        this.favourites = favourites;
     }
 
 }
