@@ -76,6 +76,7 @@ public class UserController {
     public static boolean verifyPassword(String inputPassword, String storedHashedPassword) {
          System.out.println("Input password: " + inputPassword);
         String[] parts = storedHashedPassword.split(":");
+        
 //        System.out.println("String");
 //        System.out.println(Arrays.toString(parts));
         if (parts.length != 2) {
