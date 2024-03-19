@@ -38,7 +38,7 @@ public class WasteRecordController {
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
                 String categoryString = (String) payload.get("category");
                 WasteCategory category = WasteCategory.valueOf(categoryString);
-                double weight = (double) payload.get("weight");
+                double weight = Double.parseDouble((String) payload.get("weight"));
                 WasteRecord wasteRecord = new WasteRecord(dateTime, category, weight);
                 User user = optionalUser.get();
                 int points = user.getPoints();

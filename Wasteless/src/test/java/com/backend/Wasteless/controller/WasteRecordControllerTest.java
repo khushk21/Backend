@@ -59,7 +59,7 @@ class WasteRecordControllerTest {
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
         payload.put("category","E_WASTE");
-        payload.put("weight", 2.5);
+        payload.put("weight", "2.5");
         when(userRepo.findById(user.getUserName())).thenReturn(Optional.of(user));
         when(userRepo.save(any(User.class))).thenReturn(user);
         HashMap<String, Object> actualResult = wasteRecordController.addNewRecord(payload);
@@ -82,7 +82,7 @@ class WasteRecordControllerTest {
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
         payload.put("category","E_WASTE");
-        payload.put("weight", 2.5);
+        payload.put("weight", "2.5");
         when(userRepo.findById(user.getUserName())).thenReturn(Optional.of(user));
         when(userRepo.save(any(User.class))).thenReturn(user);
         HashMap<String, Object> actualResult = wasteRecordController.addNewRecord(payload);
@@ -103,7 +103,7 @@ class WasteRecordControllerTest {
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
         payload.put("category","E_WASTE");
-        payload.put("weight", 2.5);
+        payload.put("weight", "2.0");
         when(userRepo.findById(user.getUserName())).thenReturn(Optional.empty());
         HashMap <String, Object> expectedResult = new HashMap<String, Object>();
         expectedResult.put("user", null);
@@ -122,7 +122,7 @@ class WasteRecordControllerTest {
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
         payload.put("category","E_WASTE");
-        payload.put("weight", 2.5);
+        payload.put("weight", "2.5");
         when(userRepo.findById(user.getUserName())).thenReturn(Optional.of(user));
         when(userRepo.save(any(User.class))).thenReturn(null);
         HashMap <String, Object> expectedResult = new HashMap<String, Object>();
@@ -142,7 +142,7 @@ class WasteRecordControllerTest {
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-23");
         payload.put("category","E_WASTE");
-        payload.put("weight", 2.5);
+        payload.put("weight", "2.5");
         when(userRepo.findById(user.getUserName())).thenReturn(Optional.of(user));
         when(userRepo.save(any(User.class))).thenReturn(null);
         HashMap <String, Object> expectedResult = new HashMap<String, Object>();
@@ -162,7 +162,7 @@ class WasteRecordControllerTest {
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
         payload.put("category","Incorrect Category");
-        payload.put("weight", 2.5);
+        payload.put("weight", "2.5");
         when(userRepo.findById(user.getUserName())).thenReturn(Optional.of(user));
         when(userRepo.save(any(User.class))).thenReturn(null);
         HashMap <String, Object> expectedResult = new HashMap<String, Object>();
