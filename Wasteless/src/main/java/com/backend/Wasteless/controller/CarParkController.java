@@ -30,8 +30,8 @@ public class CarParkController {
 
     //TODO: WRITE TEST CASES FOR THIS API
     @GetMapping("/retrieveCarParkInfo")
-    public HashMap<CarPark, Integer> retrieveCarParkInfo(@RequestParam List<String> carParkNum){
-        HashMap<CarPark, Integer> carParkInfo = new HashMap<>();
+    public HashMap<Integer, List> retrieveCarParkInfo(@RequestParam List<String> carParkNum){
+        HashMap<Integer, List> carParkInfo = new HashMap<>();
         List<CarPark> carParks = carParkRepo.findAllById(carParkNum);
         try{
             String jsonResponse = getCarParkAvailability();
@@ -87,20 +87,22 @@ public class CarParkController {
         return new CarPark(carParkNo, address, latitude, longitude, carParkType, parkingType, freeParking);
     }
 
-    public HashMap<CarPark, Integer> parseCarParkAvailability(String jsonResponse, List<String> carParkNum){
-        HashMap<CarPark, Integer> carParkInfo = new HashMap<>();
+    public HashMap<Integer, List> parseCarParkAvailability(String jsonResponse, List<String> carParkNum){
+        HashMap<Integer, List> carParkInfo = new HashMap<>();
         try{
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(jsonResponse);
             JsonNode items = root.get("items");
             JsonNode carParkData = items.get(0).get("carpark_data");
+            int count = 0;
             for(JsonNode carPark : carParkData){
                 String carParkNo = carPark.get("carpark_number").asText();
                 if(carParkNum.contains(carParkNo)){
                     int carParkLots = carPark.get("carpark_info").get(0).get("lots_available").asInt();
                     CarPark carParkObj = carParkRepo.findById(carParkNo).isPresent() ? carParkRepo.findById(carParkNo).get() : null;
                     if(carParkObj != null){
-                        carParkInfo.put(carParkObj, carParkLots);
+                        carParkInfo.put(count, List.of(carParkObj, carParkLots));
+                        count ++;
                     }
                 }
             }
