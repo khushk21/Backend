@@ -2,6 +2,7 @@ package com.backend.Wasteless.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Objects;
 
 @Document
 public class CarPark {
@@ -23,6 +24,24 @@ public class CarPark {
         this.carParkType = carParkType;
         this.parkingType = parkingType;
         this.freeParking = freeParking;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(carParkNo, address, latitude, longitude, carParkType, parkingType, freeParking);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarPark carPark = (CarPark) o;
+        return Double.compare(carPark.latitude, latitude) == 0 &&
+                Double.compare(carPark.longitude, longitude) == 0 &&
+                Objects.equals(carParkNo, carPark.carParkNo) &&
+                Objects.equals(address, carPark.address) &&
+                Objects.equals(carParkType, carPark.carParkType) &&
+                Objects.equals(parkingType, carPark.parkingType) &&
+                Objects.equals(freeParking, carPark.freeParking);
     }
 
     public String getCarParkNo() {
