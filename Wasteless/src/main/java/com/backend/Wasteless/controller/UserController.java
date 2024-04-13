@@ -76,34 +76,25 @@ public class UserController {
     public static boolean verifyPassword(String inputPassword, String storedHashedPassword) {
          System.out.println("Input password: " + inputPassword);
         String[] parts = storedHashedPassword.split(":");
-        
-//        System.out.println("String");
-//        System.out.println(Arrays.toString(parts));
+
         if (parts.length != 2) {
             throw new IllegalArgumentException("Invalid storedHashedPassword format");
         }
         String storedHash = parts[0];
-        // Convert the salt string to a byte array
         byte[] salt = hexStringToByteArray(parts[1]);
 
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            // Update the message digest with the salt
             md.update(salt);
-            // Compute the hash of the input password with the salt
             byte[] hashedInputPassword = md.digest(inputPassword.getBytes(StandardCharsets.UTF_8));
-            // Convert the hashed input password bytes to a hexadecimal string
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashedInputPassword) {
                 String hex = Integer.toHexString(0xff & b);
                 if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);
             }
-            // Compare the hashed input password with the stored hashed password
             String hashedInputPasswordString = hexString.toString();
-//            System.out.println("Below the same? ");
-//            System.out.println(hashedInputPasswordString);
-//            System.out.println(storedHash);
+
             return storedHash.equals(hashedInputPasswordString);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
@@ -142,18 +133,10 @@ public class UserController {
             boolean passwordMatch = verifyPassword(credentials.getPassword(),existingUser.getPassword());
             System.out.println("Printing credentials.getPassword (user's input): " + credentials.getPassword());
             System.out.println("Printing of existing user password (from db): " + existingUser.getPassword());
-//            System.out.println(hashPassword(credentials.getPassword()));
-//            System.out.println("Above is user input password");
-//            System.out.println(existingUser.getPassword());
-//            System.out.println("Above is existing user password");
             if(passwordMatch){
                 result.put("user",existingUser);
                 result.put("error", null);
             }
-//            if(credentials.getPassword().equals(existingUser.getPassword())){
-//                result.put("user",existingUser);
-//                result.put("error", null);
-//            }
             else{
                 result.put("user", null);
                 Error errorMsg = new Error("Incorrect Password.");
