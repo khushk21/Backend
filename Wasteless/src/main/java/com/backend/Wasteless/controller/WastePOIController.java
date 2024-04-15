@@ -83,10 +83,16 @@ public class WastePOIController {
         return wastePOIRepo.findAll();
     }
 
+    @GetMapping("/getPOIById")
+    public WastePOI retrieveWastePOI(@RequestParam String id){
+        return wastePOIRepo.findById(id).orElse(null);
+    }
+
     //TODO: WRITE TEST CASES FOR THIS API
     @GetMapping("/retrieveNearestPOIs")
-    public List<WastePOI> retrieveNearestPOIs(@RequestParam double latitude, @RequestParam double longitude){
-        List<WastePOI> wastePOIs = wastePOIRepo.findAll();
+    public List<WastePOI> retrieveNearestPOIs(@RequestParam double latitude, @RequestParam double longitude, @RequestParam String category){
+        WasteCategory wasteCategory = WasteCategory.valueOf(category);
+        List<WastePOI> wastePOIs = wastePOIRepo.findAllByWasteCategory(wasteCategory);
         HashMap<WastePOI, Double> distances = new HashMap<>();
         for(WastePOI wastePOI: wastePOIs){
             double distance = haversine(latitude, longitude, wastePOI.getLatitude(), wastePOI.getLongitude());

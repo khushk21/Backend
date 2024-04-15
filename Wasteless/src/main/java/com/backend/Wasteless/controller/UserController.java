@@ -157,4 +157,10 @@ public class UserController {
     public List<User> getAllUser() {
         return userRepo.findAll();
     }
+
+    @GetMapping("/getUser")
+    public Optional<User> getUser(@RequestParam String userName) {
+        return userRepo.findById(userName);
+    }
+
 }
