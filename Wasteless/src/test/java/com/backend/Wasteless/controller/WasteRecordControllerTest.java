@@ -2,6 +2,7 @@ package com.backend.Wasteless.controller;
 
 import com.backend.Wasteless.constants.WasteCategory;
 import com.backend.Wasteless.model.WasteRecord;
+import com.backend.Wasteless.service.WasteRecordService;
 import com.backend.Wasteless.repository.UserRepository;
 import com.backend.Wasteless.repository.WasteRecordRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -36,6 +37,8 @@ class WasteRecordControllerTest {
     private UserRepository userRepo;
     @Mock
     private WasteRecordRepository wasteRecordRepo;
+    @Mock
+    private WasteRecordService wasteRecordService;
     @InjectMocks
     private WasteRecordController wasteRecordController;
     @InjectMocks
@@ -177,31 +180,31 @@ class WasteRecordControllerTest {
 
     @Test
     void calculatePointsEWaste() throws Exception{
-        int points = wasteRecordController.calculatePoints(2, WasteCategory.E_WASTE);
+        int points = wasteRecordService.calculatePoints(2, WasteCategory.E_WASTE);
         assertEquals(points, 6);
     }
 
     @Test
     void calculatePointsNormalWaste() throws Exception{
-        int points = wasteRecordController.calculatePoints(2, WasteCategory.NORMAL_WASTE);
+        int points = wasteRecordService.calculatePoints(2, WasteCategory.NORMAL_WASTE);
         assertEquals(points, 14);
     }
 
     @Test
     void calculatePointsLightingWaste() throws Exception{
-        int points = wasteRecordController.calculatePoints(2, WasteCategory.LIGHTING_WASTE);
+        int points = wasteRecordService.calculatePoints(2, WasteCategory.LIGHTING_WASTE);
         assertEquals(points, 8);
     }
 
     @Test
     void calculatePointsWasteTreatment() throws Exception{
-        int points = wasteRecordController.calculatePoints(2, WasteCategory.WASTE_TREATMENT);
+        int points = wasteRecordService.calculatePoints(2, WasteCategory.WASTE_TREATMENT);
         assertEquals(points, 12);
     }
 
     @Test
     void calculatePointsCashForTrash() throws Exception{
-        int points = wasteRecordController.calculatePoints(2, WasteCategory.CASH_FOR_TRASH);
+        int points = wasteRecordService.calculatePoints(2, WasteCategory.CASH_FOR_TRASH);
         assertEquals(points, 18);
     }
 }
