@@ -53,7 +53,8 @@ class WasteRecordControllerTest {
 
     @Test
     void addNewRecordSuccessWithFirstWasteRecord() throws Exception{
-        User user = new User("test_pass", "Success", "test@gmail.com", "password");
+        //User user = new User("test_pass", "Success", "test@gmail.com", "password");
+        User user = new User.Builder("test_pass", "password", "Success","test@gmail.com").build();
         user.setPoints(0);
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", user.getUserName());
@@ -75,7 +76,8 @@ class WasteRecordControllerTest {
 
     @Test
     void addNewRecordSuccessWithMultipleWasteRecords() throws Exception{
-        User user = new User("test_pass", "Success", "test@gmail.com", "password");
+        //User user = new User("test_pass", "Success", "test@gmail.com", "password");
+        User user = new User.Builder("test_pass", "password", "Success","test@gmail.com").build();
         user.setPoints(70);
         user.setWasteRecords(List.of(new WasteRecord(LocalDateTime.parse("2024-02-26T21:47:30"), WasteCategory.NORMAL_WASTE, 10)));
         Map<String, Object> payload = new HashMap<>();
@@ -98,7 +100,8 @@ class WasteRecordControllerTest {
 
     @Test
     void addNewRecordFailureUsernameNotFound() throws Exception{
-        User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        //User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        User user = new User.Builder("test_pass", "password", "Failure","test@gmail.com").build();
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
@@ -117,7 +120,8 @@ class WasteRecordControllerTest {
 
     @Test
     void addNewRecordFailureUserNotSaved() throws Exception{
-        User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        //User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        User user = new User.Builder("test_pass", "password", "Failure","test@gmail.com").build();
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
@@ -137,7 +141,8 @@ class WasteRecordControllerTest {
 
     @Test
     void addNewRecordFailureInvalidDateTime() throws Exception{
-        User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        //User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        User user = new User.Builder("test_pass", "password", "Failure","test@gmail.com").build();
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-23");
@@ -157,7 +162,8 @@ class WasteRecordControllerTest {
 
     @Test
     void addNewRecordFailureInvalidWasteCategory() throws Exception{
-        User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        //User user = new User("test_pass", "Failure", "test@gmail.com", "password");
+        User user = new User.Builder("test_pass", "password", "Failure","test@gmail.com").build();
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", user.getUserName());
         payload.put("dateTime", "2024-02-25T21:47:30");
