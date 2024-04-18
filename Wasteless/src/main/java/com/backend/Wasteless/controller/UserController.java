@@ -19,7 +19,11 @@ public class UserController {
     @PostMapping("/registerUser")
     public String createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
-        return "Successfully saved " + savedUser.getUserName();
+        if (savedUser != null) {
+            return "Successfully saved " + savedUser.getUserName();
+        } else {
+            return "Failed to save user";
+        }
     }
 
     @PostMapping("/userLogin")
