@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @CrossOrigin(origins="*")
-public class CarParkController {
+public class CarParkController implements FactoryDesign {
 
     private static final Logger logger = LoggerFactory.getLogger(CarParkController.class);
 
@@ -32,6 +32,11 @@ public class CarParkController {
     private WastePOIRepository wastePOIRepo;
     @Autowired
     private  CarParkRepository carParkRepo;
+
+    @Override
+    public void parent() {
+        System.out.println("Inside carParkController::parent() method.");
+    }
 
     //TODO: WRITE TEST CASES FOR THIS API
     @GetMapping("/retrieveCarParkInfo")
