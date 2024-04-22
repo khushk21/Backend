@@ -63,7 +63,7 @@ public class CarParkService {
         return result;
     }
 
-    private CarPark getCarPark(String line) {
+    public CarPark getCarPark(String line) {
         line = line.replaceAll("\"", "");
         String[] data = line.split(",");
         String carParkNo = data[0];
@@ -78,7 +78,7 @@ public class CarParkService {
         return new CarPark(carParkNo, address, latitude, longitude, carParkType, parkingType, freeParking);
     }
 
-    private HashMap<Integer, List> parseCarParkAvailability(String jsonResponse, List<String> carParkNum) {
+    public HashMap<Integer, List> parseCarParkAvailability(String jsonResponse, List<String> carParkNum) {
         HashMap<Integer, List> carParkInfo = new HashMap<>();
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -105,7 +105,7 @@ public class CarParkService {
         }
     }
 
-    private String getCarParkAvailability() throws IOException {
+    public String getCarParkAvailability() throws IOException {
         URL url = new URL("https://api.data.gov.sg/v1/transport/carpark-availability");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
