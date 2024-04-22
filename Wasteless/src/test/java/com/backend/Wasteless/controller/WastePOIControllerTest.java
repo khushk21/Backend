@@ -5,6 +5,7 @@ import com.backend.Wasteless.model.CarPark;
 import com.backend.Wasteless.model.WastePOI;
 import com.backend.Wasteless.repository.CarParkRepository;
 import com.backend.Wasteless.repository.WastePOIRepository;
+import com.backend.Wasteless.service.WastePOIService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -39,6 +40,8 @@ public class WastePOIControllerTest {
     private WastePOIRepository wastePOIRepository;
     @InjectMocks
     private WastePOIController wastePOIController;
+    @Mock
+    private WastePOIService wastePOIService;
 
     @Mock
     private CarParkRepository carParkRepository;

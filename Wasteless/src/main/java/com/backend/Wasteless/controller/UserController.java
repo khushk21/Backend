@@ -1,166 +1,52 @@
 package com.backend.Wasteless.controller;
 
 import com.backend.Wasteless.model.User;
-import com.backend.Wasteless.repository.UserRepository;
+import com.backend.Wasteless.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.*;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepo;
-
-//    @RequestMapping(value="/")
-//    public void redirect(HttpServletResponse response) throws IOException {
-//        response.sendRedirect("/swagger-ui.html");
-//    }
-
-    // Save method is predefine method in Mongo Repository
-    // with this method we will save user in our database
-
-    // Method to generate a random salt
-    private static byte[] generateSalt() {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        return salt;
-    }
-
-    // Method to hash a password using SHA-512 with salt
-    public static String hashPassword(String password) {
-        System.out.println("REAL user input : " + password);
-        byte[] salt = generateSalt();
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashedPassword) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            // Convert salt bytes to hexadecimal representation
-            StringBuilder saltString = new StringBuilder();
-            for (byte b : salt) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) saltString.append('0');
-                saltString.append(hex);
-            }
-            // Concatenate hashed password with salt using a delimiter
-            return hexString.toString() + ":" + saltString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static byte[] hexStringToByteArray(String hexString) {
-        int len = hexString.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i + 1), 16));
-        }
-        return data;
-    }
-    // Method to verify a password
-    public static boolean verifyPassword(String inputPassword, String storedHashedPassword) {
-         System.out.println("Input password: " + inputPassword);
-        String[] parts = storedHashedPassword.split(":");
-
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("Invalid storedHashedPassword format");
-        }
-        String storedHash = parts[0];
-        byte[] salt = hexStringToByteArray(parts[1]);
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            byte[] hashedInputPassword = md.digest(inputPassword.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashedInputPassword) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            String hashedInputPasswordString = hexString.toString();
-
-            return storedHash.equals(hashedInputPasswordString);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private UserService userService;
 
     @PostMapping("/registerUser")
     public String createUser(@RequestBody User user) {
-        //TODO: Add hashing password logic
-//        user.setPassword(user.getPassword()+"1");
-        String hashedPassword = hashPassword(user.getPassword());
-        System.out.println("hashedPassword inside createUser method " + hashedPassword);
-        Optional<User> validateUser = userRepo.findById(user.getUserName());
-        if(validateUser.isEmpty()){
-            user.setPoints(0);
-            user.setPassword(hashedPassword);
-            User savedUser = userRepo.save(user);
+        User savedUser = userService.createUser(user);
+        if (savedUser != null) {
             return "Successfully saved " + savedUser.getUserName();
+        } else {
+            return "Failed to save user";
         }
-        else{
-            return "Username already ex5678  ists. Please try again.";
-        }
-
     }
 
     @PostMapping("/userLogin")
-    public HashMap<String, Object> verifyCredentials(@RequestBody User credentials){
-        Optional<User> user = userRepo.findById(credentials.getUserName());
-        System.out.println("1 credentials.getUsername " + credentials.getUserName());
-        System.out.println("2 credentials.getPassword()" + credentials.getPassword());
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        if(user.isPresent()) {
-            User existingUser = user.get();
-            //TODO: Add hashing for the password before checking
-            System.out.println("User input password: "  + credentials.getPassword());
-            boolean passwordMatch = verifyPassword(credentials.getPassword(),existingUser.getPassword());
-            System.out.println("Printing credentials.getPassword (user's input): " + credentials.getPassword());
-            System.out.println("Printing of existing user password (from db): " + existingUser.getPassword());
-            if(passwordMatch){
-                result.put("user",existingUser);
-                result.put("error", null);
-            }
-            else{
-                result.put("user", null);
-                Error errorMsg = new Error("Incorrect Password.");
-                result.put("error", errorMsg);
-            }
-        }
-        else{
+    public HashMap<String, Object> verifyCredentials(@RequestBody User credentials) {
+        HashMap<String, Object> result = new HashMap<>();
+        try {
+            User existingUser = userService.verifyCredentials(credentials).orElse(null);
+            result.put("user", existingUser);
+            result.put("error", null);
+        } catch (Exception e) {
             result.put("user", null);
-            Error errorMsg = new Error("User account does not exist.");
-            result.put("error", errorMsg);
+            result.put("error", new Error(e.getMessage()));
         }
         return result;
     }
 
-    // findAll method is predefine method in Mongo Repository
-    // with this method we will all user that is save in our database
     @GetMapping("/getAllUser")
     public List<User> getAllUser() {
-        return userRepo.findAll();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/getUser")
     public Optional<User> getUser(@RequestParam String userName) {
-        return userRepo.findById(userName);
+        return userService.getUserByUsername(userName);
     }
-
 }

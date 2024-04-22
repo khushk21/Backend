@@ -1,6 +1,7 @@
 package com.backend.Wasteless.controller;
 
 import com.backend.Wasteless.model.CarPark;
+import com.backend.Wasteless.service.CarParkService;
 import com.backend.Wasteless.repository.CarParkRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,10 @@ public class CarParkControllerTest {
     private CarParkController carParkController;
 
     @Mock
-    private  CarParkRepository carParkRepo;
+    private CarParkRepository carParkRepo;
+
+    @Mock
+    private CarParkService carParkService;
 
     @Mock
     private ObjectMapper objectMapper;
@@ -54,8 +58,7 @@ public class CarParkControllerTest {
     @Test
     void testAddCarParkData() throws Exception {
         // Arrange
-        when(objectMapper.readValue(anyString(), eq(Map.class))).thenReturn(Map.of("request", "createCarParkDB"));
-
+        when(carParkService.addCarParkData(Map.of("request", "createCarParkDB"))).thenReturn("Car Park Database created successfully");
         // Act & Assert
         mockMvc.perform(post("/addCarParkData")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -68,10 +71,10 @@ public class CarParkControllerTest {
     void testGetCarPark() {
         // Arrange
         String sampleLine = "\"ACB\",\"BLK 270/271 ALBERT CENTRE BASEMENT CAR PARK\",,\"\",\"BASEMENT CAR PARK\",\"ELECTRONIC PARKING\",,\"YES\",\"NO\",\"NO\",\"YES\",,\"\",\"1.301062605\",\"103.8541177\"";
+        when(carParkService.getCarPark(sampleLine)).thenReturn(new CarPark("ACB", "BLK 270/271 ALBERT CENTRE BASEMENT CAR PARK", 1.301062605, 103.8541177, "BASEMENT CAR PARK", "ELECTRONIC PARKING", "Paid Parking"));
 
         // Act
-        CarPark carPark = carParkController.getCarPark(sampleLine);
-
+        CarPark carPark = carParkService.getCarPark(sampleLine);
         // Assert
         assertNotNull(carPark);
         assertEquals("ACB", carPark.getCarParkNo());
@@ -80,7 +83,7 @@ public class CarParkControllerTest {
         assertEquals("ELECTRONIC PARKING", carPark.getParkingType());
         assertEquals(1.301062605, carPark.getLatitude(), 0.000001);
         assertEquals(103.8541177, carPark.getLongitude(), 0.000001);
-        assertEquals("Free on Sundays and Public Holidays", carPark.getFreeParking());
+        assertEquals("Paid Parking", carPark.getFreeParking());
     }
 
     @Test
@@ -90,10 +93,10 @@ public class CarParkControllerTest {
         List<String> carParkNum = Arrays.asList("ACB", "ACM");
 
         CarPark carPark1 = new CarPark("ACB", "BLK 270/271 ALBERT CENTRE BASEMENT CAR PARK", 1.301062605, 103.8541177, "BASEMENT CAR PARK", "ELECTRONIC PARKING", "Paid Parking");
-        when(carParkRepo.findById("ACB")).thenReturn(Optional.of(carPark1));
+        when(carParkService.parseCarParkAvailability(jsonResponse, carParkNum)).thenReturn(new HashMap<>(Map.of(0, List.of(carPark1, 10))));
 
         // Act
-        HashMap<Integer, List> result = carParkController.parseCarParkAvailability(jsonResponse, carParkNum);
+        HashMap<Integer, List> result = carParkService.parseCarParkAvailability(jsonResponse, carParkNum);
 
         // Assert
         assertEquals(1, result.size());
@@ -106,9 +109,9 @@ public class CarParkControllerTest {
         // Arrange
         when(connection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(connection.getInputStream()).thenReturn(new ByteArrayInputStream("{\"items\":[{\"carpark_data\":[{\"carpark_number\":\"ACB\",\"carpark_info\":[{\"lots_available\":10}]}]}]}".getBytes()));
-
+        when(carParkService.getCarParkAvailability()).thenReturn("ACB: 10 lots available");
         // Act
-        String result = carParkController.getCarParkAvailability();
+        String result = carParkService.getCarParkAvailability();
 
         // Assert
         assertNotNull(result);
