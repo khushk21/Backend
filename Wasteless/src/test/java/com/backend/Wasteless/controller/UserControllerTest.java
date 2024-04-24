@@ -48,8 +48,7 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
         String result = userController.createUser(user);
-        //assertEquals("Successfully saved " + user.getUserName(), result);
-        assertEquals("Success", result);
+        assertEquals("Successfully saved " + user.getUserName(), result);
     }
 
     @Test
